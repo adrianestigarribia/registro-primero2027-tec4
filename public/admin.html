@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light only">
+  <meta name="theme-color" content="#0f2d52">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel · Inscripción a 1° año · E.E.S.T. N°4</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20261111">
+  <link rel="stylesheet" href="assets/admin.css?v=20261111">
+</head>
+<body class="admin">
+
+  <!-- ===== Login ===== -->
+  <main id="view-login">
+    <header class="band">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">N°4</span>
+        <span class="brand-name">E.E.S.T. N°4<br>Berazategui</span>
+      </div>
+      <div class="hero">
+        <p class="hero-kicker">Inscripción a 1° año</p>
+        <h1>Panel de administración</h1>
+      </div>
+    </header>
+    <div class="sheet">
+      <form id="login" class="card" novalidate>
+        <h2 class="card-title">Ingresá la contraseña</h2>
+        <p class="hint">Solo para directivos y preceptoría. Los datos son de menores de edad: no dejes el panel abierto en una compu compartida.</p>
+        <p class="form-error" id="login-error" role="alert" hidden></p>
+        <div class="field">
+          <label for="clave">Contraseña</label>
+          <input class="input" id="clave" type="password" autocomplete="current-password" maxlength="72" required>
+        </div>
+        <button class="btn btn-dark btn-block" type="submit" id="login-btn">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-9h-1V6A5 5 0 0 0 7 6h2a3 3 0 0 1 6 0v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2z"/></svg><span>Entrar</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===== Panel ===== -->
+  <div id="view-panel" hidden>
+    <header class="topbar" id="topbar">
+      <div class="topbar-inner">
+        <span class="brand-mark" aria-hidden="true">N°4</span>
+        <div class="topbar-title">
+          <strong>Inscripción a 1° año</strong>
+          <span class="live" id="live"><i class="live-dot"></i><span id="live-text">Conectando…</span></span>
+        </div>
+        <button class="icon-btn" id="btn-exportar" type="button" aria-label="Descargar CSV" title="Descargar CSV (Excel)">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5zm7-3 6-6-1.4-1.4L13 13.2V3h-2v10.2L7.4 9.6 6 11z"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-clave" type="button" aria-label="Cambiar contraseña" title="Cambiar contraseña">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm5.6-4A6 6 0 1 0 12.6 14H17v4h4v-4h2v-4z"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-salir" type="button" aria-label="Salir" title="Salir">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l1.4-1.4L8.8 13H20v-2H8.8l2.6-2.6L10 7l-5 5zM4 5h8V3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8v-2H4z"/></svg>
+        </button>
+      </div>
+
+      <!-- Vacantes: barra de progreso de las ocupadas sobre el cupo -->
+      <div class="cupo" aria-live="polite">
+        <div class="cupo-txt">
+          <span><strong id="n-ocupadas">0</strong> de <strong id="n-cupo">68</strong> vacantes ocupadas</span>
+          <span class="cupo-libres" id="n-libres">68 libres</span>
+        </div>
+        <div class="cupo-barra" aria-hidden="true"><div class="cupo-relleno" id="cupo-relleno"></div></div>
+      </div>
+
+      <!-- Contadores: también son filtros de la tabla -->
+      <div class="stats" role="group" aria-label="Filtrar por estado">
+        <button class="stat" data-filtro="todos" aria-pressed="true" type="button">
+          <span class="stat-n" id="n-total">0</span><span class="stat-l">Todas</span>
+        </button>
+        <button class="stat stat-ing" data-filtro="ingresante" aria-pressed="false" type="button">
+          <span class="stat-n" id="n-ing">0</span><span class="stat-l">Ingresantes</span>
+        </button>
+        <button class="stat stat-esp" data-filtro="espera" aria-pressed="false" type="button">
+          <span class="stat-n" id="n-esp">0</span><span class="stat-l">Lista de espera</span>
+        </button>
+        <button class="stat stat-fz" data-filtro="fuera_zona" aria-pressed="false" type="button">
+          <span class="stat-n" id="n-fz">0</span><span class="stat-l">Fuera de zona</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="aviso-clave" id="aviso-clave" role="alert" hidden>
+      <span>Estás usando la contraseña inicial de la configuración. Cambiala antes de abrir la inscripción.</span>
+      <button class="btn btn-dark" id="aviso-clave-btn" type="button">Cambiar ahora</button>
+    </div>
+
+    <div class="subbar">
+      <label class="search">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+        <span class="sr-only">Buscar</span>
+        <input id="buscar" type="search" placeholder="Buscar por apellido o DNI" autocomplete="off" spellcheck="false">
+      </label>
+      <p class="resumen" id="resumen" aria-live="polite"></p>
+    </div>
+
+    <main class="list-wrap">
+      <!-- Tabla: en compu se ve como tabla; en el celular cada fila se ve como una tarjeta -->
+      <table class="tabla" id="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Orden</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Alumno</th>
+            <th scope="col">DNI</th>
+            <th scope="col">Nacimiento</th>
+            <th scope="col">Escuela primaria</th>
+            <th scope="col">Domicilio</th>
+            <th scope="col">Contacto</th>
+            <th scope="col">Enviada</th>
+            <th scope="col"><span class="sr-only">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody id="filas"></tbody>
+      </table>
+      <p class="vacio" id="vacio" hidden></p>
+    </main>
+  </div>
+
+  <!-- ===== Confirmar anulación ===== -->
+  <dialog class="dlg" id="dlg-anular" aria-labelledby="anular-titulo">
+    <form method="dialog" class="dlg-body" id="form-anular">
+      <h2 id="anular-titulo">¿Anular esta inscripción?</h2>
+      <p class="dlg-quien" id="anular-quien"></p>
+      <p id="anular-efecto"></p>
+      <p class="dlg-nota">No se borra: queda guardada como anulada y aparece al final del CSV. Si la familia se vuelve a inscribir con el mismo DNI, entra al final de la fila.</p>
+      <p class="form-error" id="anular-error" role="alert" hidden></p>
+      <div class="dlg-acciones">
+        <button class="btn btn-sec" value="cancelar" type="submit">Cancelar</button>
+        <button class="btn btn-danger" id="anular-ok" value="anular" type="submit">Anular inscripción</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Cambiar contraseña ===== -->
+  <dialog class="dlg" id="dlg-clave" aria-labelledby="clave-titulo">
+    <form class="dlg-body" id="form-clave" novalidate>
+      <h2 id="clave-titulo">Cambiar contraseña</h2>
+      <p class="dlg-nota">Entre 10 y 72 caracteres. Al cambiarla, se cierra el panel en los demás dispositivos.</p>
+      <p class="form-error" id="clave-error" role="alert" hidden></p>
+      <div class="field" data-field="actual">
+        <label for="clave-actual">Contraseña actual</label>
+        <input class="input" id="clave-actual" type="password" autocomplete="current-password" maxlength="72">
+      </div>
+      <div class="field" data-field="nueva">
+        <label for="clave-nueva">Contraseña nueva</label>
+        <input class="input" id="clave-nueva" type="password" autocomplete="new-password" maxlength="72">
+      </div>
+      <div class="field" data-field="repetir">
+        <label for="clave-repetir">Repetí la contraseña nueva</label>
+        <input class="input" id="clave-repetir" type="password" autocomplete="new-password" maxlength="72">
+      </div>
+      <div class="dlg-acciones">
+        <button class="btn btn-sec" id="clave-cancelar" type="button">Cancelar</button>
+        <button class="btn btn-dark" id="clave-ok" type="submit">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="assets/admin.js?v=20261111"></script>
+</body>
+</html>

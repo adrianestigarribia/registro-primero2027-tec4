@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light only">
+  <meta name="theme-color" content="#0f2d52">
+  <title>Inscripción a 1° año · E.E.S.T. N°4 Berazategui</title>
+  <meta name="description" content="Solicitud de vacante para 1° año en la E.E.S.T. N°4 de Berazategui.">
+  <!-- Todo es local: la CSP solo permite archivos de este mismo servidor ('self') -->
+  <link rel="stylesheet" href="assets/styles.css?v=20261111">
+</head>
+<body>
+
+  <!-- ===== Formulario ===== -->
+  <main id="view-form">
+    <header class="band">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">N°4</span>
+        <span class="brand-name">E.E.S.T. N°4<br>Berazategui</span>
+      </div>
+      <div class="hero">
+        <p class="hero-kicker" id="hero-ciclo">Ciclo lectivo 2027</p>
+        <h1>Inscripción a 1° año</h1>
+        <p class="lead">Completá los datos del alumno y del adulto responsable. Tarda unos 5 minutos.</p>
+      </div>
+    </header>
+
+    <div class="sheet">
+      <form id="form" class="card" novalidate>
+        <div class="info">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
+          <p>Las vacantes se asignan <strong>por orden de llegada</strong> entre los alumnos que viven en el partido de Berazategui. Enviá <strong>una sola solicitud por alumno</strong>: si la mandás de nuevo, vas a ver la misma constancia.</p>
+        </div>
+
+        <p class="form-error" id="form-error" role="alert" tabindex="-1" hidden></p>
+
+        <!-- ---------- Alumno ---------- -->
+        <fieldset class="seccion">
+          <legend class="seccion-titulo"><span class="paso">1</span>Datos del alumno</legend>
+
+          <div class="row-2">
+            <div class="field" data-field="alumnoApellido">
+              <label for="alumnoApellido">Apellido/s</label>
+              <input class="input" id="alumnoApellido" name="alumnoApellido" autocomplete="off" autocapitalize="words" maxlength="80" required>
+            </div>
+            <div class="field" data-field="alumnoNombre">
+              <label for="alumnoNombre">Nombre/s</label>
+              <input class="input" id="alumnoNombre" name="alumnoNombre" autocomplete="off" autocapitalize="words" maxlength="80" required>
+            </div>
+          </div>
+
+          <div class="field" data-field="dni">
+            <label for="dni">DNI del alumno</label>
+            <input class="input" id="dni" name="dni" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="Solo números" required>
+          </div>
+
+          <!-- Tres listas en vez de un calendario: en el celular es mucho más rápido elegir el año -->
+          <fieldset class="field" data-field="fechaNacimiento">
+            <legend class="legend">Fecha de nacimiento</legend>
+            <div class="fecha">
+              <label class="sr-only" for="nacDia">Día</label>
+              <select class="select" id="nacDia" name="nacDia" required>
+                <option value="">Día</option>
+              </select>
+              <label class="sr-only" for="nacMes">Mes</label>
+              <select class="select" id="nacMes" name="nacMes" required>
+                <option value="">Mes</option>
+                <option value="01">Enero</option><option value="02">Febrero</option><option value="03">Marzo</option>
+                <option value="04">Abril</option><option value="05">Mayo</option><option value="06">Junio</option>
+                <option value="07">Julio</option><option value="08">Agosto</option><option value="09">Septiembre</option>
+                <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+              </select>
+              <label class="sr-only" for="nacAnio">Año</label>
+              <!-- form.js reemplaza estos años con el rango de _config.php (vía /api/ping) -->
+              <select class="select" id="nacAnio" name="nacAnio" required>
+                <option value="">Año</option>
+                <option>2016</option><option>2015</option><option>2014</option>
+                <option>2013</option><option>2012</option><option>2011</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <div class="field" data-field="escuela">
+            <label for="escuela">Escuela primaria a la que concurrió</label>
+            <input class="input" id="escuela" name="escuela" autocomplete="off" maxlength="120" placeholder="Ej.: EP N° 12" required>
+          </div>
+        </fieldset>
+
+        <!-- ---------- Domicilio y contacto ---------- -->
+        <fieldset class="seccion">
+          <legend class="seccion-titulo"><span class="paso">2</span>Domicilio y contacto</legend>
+
+          <div class="field" data-field="calle">
+            <label for="calle">Calle</label>
+            <input class="input" id="calle" name="calle" autocomplete="off" maxlength="100" placeholder="Ej.: Calle 14 o Av. Mitre" required>
+          </div>
+
+          <div class="row-2 row-2-keep">
+            <div class="field" data-field="numero">
+              <label for="numero">Número</label>
+              <input class="input" id="numero" name="numero" autocomplete="off" maxlength="10" placeholder="1234 o S/N" required>
+            </div>
+            <div class="field" data-field="pisoDepto">
+              <label for="pisoDepto">Piso/Depto <span class="opcional">(opcional)</span></label>
+              <input class="input" id="pisoDepto" name="pisoDepto" autocomplete="off" maxlength="20" placeholder="Ej.: 2° B">
+            </div>
+          </div>
+
+          <div class="field" data-field="cp">
+            <label for="cp">Código postal</label>
+            <input class="input input-cp" id="cp" name="cp" autocomplete="postal-code" autocapitalize="characters" maxlength="10" placeholder="Ej.: 1884" required>
+            <p class="ayuda">4 números (1884) o el formato nuevo (B1884ABC).</p>
+          </div>
+
+          <div class="field" data-field="email">
+            <label for="email">Email de contacto</label>
+            <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="nombre@ejemplo.com" required>
+          </div>
+        </fieldset>
+
+        <!-- ---------- Adulto responsable ---------- -->
+        <fieldset class="seccion">
+          <legend class="seccion-titulo"><span class="paso">3</span>Adulto responsable</legend>
+          <div class="row-2">
+            <div class="field" data-field="responsableApellido">
+              <label for="responsableApellido">Apellido</label>
+              <input class="input" id="responsableApellido" name="responsableApellido" autocomplete="family-name" autocapitalize="words" maxlength="80" required>
+            </div>
+            <div class="field" data-field="responsableNombre">
+              <label for="responsableNombre">Nombre</label>
+              <input class="input" id="responsableNombre" name="responsableNombre" autocomplete="given-name" autocapitalize="words" maxlength="80" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- ---------- Aviso de privacidad (Ley 25.326): visible ANTES de enviar ---------- -->
+        <section class="privacidad" aria-labelledby="priv-titulo">
+          <h2 id="priv-titulo">Aviso de privacidad</h2>
+          <p>Los datos de este formulario los recolecta la <strong>E.E.S.T. N°4 de Berazategui</strong> solo para gestionar la inscripción a 1° año <span class="ciclo-txt">2027</span> y su lista de espera. Son obligatorios para tramitar la solicitud.</p>
+          <ul>
+            <li>Solo los ve el personal directivo y de preceptoría autorizado, con contraseña. No se publican ni se comparten con terceros.</li>
+            <li>Se conservan mientras dure el proceso de inscripción del ciclo <span class="ciclo-txt">2027</span>. Después, los de quienes no ingresen se eliminan.</li>
+            <li>Podés pedir ver, corregir o eliminar los datos (arts. 14 a 16 de la Ley 25.326) en la secretaría de la escuela. El acceso es gratuito a intervalos no menores a seis meses, salvo interés legítimo.</li>
+          </ul>
+          <p class="legal">La Agencia de Acceso a la Información Pública, en su carácter de órgano de control de la Ley N° 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.</p>
+
+          <div class="field" data-field="privacidad">
+            <label class="acepto">
+              <input type="checkbox" id="privacidad" name="privacidad" required>
+              <span>Soy el adulto responsable del alumno, leí el aviso de privacidad y acepto que la escuela use estos datos para la inscripción.</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Campo trampa para bots: oculto, una persona nunca lo ve ni lo completa -->
+        <div hidden aria-hidden="true">
+          <label>No completar <input name="web" type="text" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="submit" type="submit">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg><span>Enviar solicitud</span>
+        </button>
+        <p class="foot-note">Al enviar, vas a ver tu número de solicitud y su estado.</p>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===== Enviando: pantalla mientras se guarda ===== -->
+  <section id="view-cargando" class="pass cargando" hidden>
+    <div class="pass-inner">
+      <div class="cargando-centro" role="status" aria-live="polite">
+        <div class="cargando-ring" aria-hidden="true"></div>
+        <h1 class="pass-title" id="cargando-titulo">Enviando…</h1>
+        <p class="pass-sub" id="cargando-sub">Guardando la solicitud. No cierres esta pantalla.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Constancia (pantalla de confirmación) ===== -->
+  <!-- El color cambia con el estado: verde (Inscripción Recibida), naranja (Lista de Espera), gris (Fuera de zona) -->
+  <section id="view-constancia" class="pass" hidden>
+    <div class="pass-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">N°4</span>
+        <span class="brand-name">Inscripción a 1° año<br>E.E.S.T. N°4 Berazategui</span>
+      </div>
+
+      <div class="pass-head">
+        <div class="pass-check" id="c-icono" aria-hidden="true"></div>
+        <h1 class="pass-title" id="c-titulo" tabindex="-1">Inscripción Recibida</h1>
+      </div>
+      <p class="pass-sub" id="c-explica"></p>
+
+      <p class="pass-dup" id="c-dup" role="status" hidden>Este DNI ya tenía una solicitud. Esta es la constancia original: no se ocupó otra vacante.</p>
+
+      <div class="pass-ticket">
+        <p class="ticket-label">Número de solicitud</p>
+        <p class="ticket-num" id="c-numero">—</p>
+        <dl class="pass-grid">
+          <div class="wide"><dt>Alumno</dt><dd id="c-alumno"></dd></div>
+          <div><dt>DNI</dt><dd class="pass-num" id="c-dni"></dd></div>
+          <div><dt>Enviada</dt><dd class="pass-num" id="c-fecha"></dd></div>
+          <div class="wide"><dt>Estado</dt><dd><span class="estado" id="c-estado"></span></dd></div>
+        </dl>
+      </div>
+
+      <p class="pass-tip">Sacale una captura a esta pantalla o imprimila. Si la perdés, completá el formulario de nuevo con el mismo DNI y fecha de nacimiento: vas a ver esta misma constancia.</p>
+
+      <div class="pass-actions">
+        <button class="btn btn-light btn-block" id="imprimir" type="button">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12v5H6zM4 8h16a2 2 0 0 1 2 2v7h-4v5H6v-5H2v-7a2 2 0 0 1 2-2zm4 9v3h8v-5H8z"/></svg>Imprimir o guardar en PDF
+        </button>
+        <button class="btn btn-ghost-light btn-block" id="otro" type="button">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2zm9 4c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z"/></svg>Inscribir a otro alumno
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script src="assets/form.js?v=20261111"></script>
+</body>
+</html>
