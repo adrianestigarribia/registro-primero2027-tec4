@@ -1,0 +1,42 @@
+# Rutas limpias: /admin y /api/registro (sin .html ni .php). Necesita mod_rewrite de Apache.
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+RewriteRule ^admin/?$ admin.html [L]
+RewriteRule ^api/([a-z]+)$ api/$1.php [L,QSA]
+
+# Los archivos internos de la API (_config.php con la contraseña, _db.php, etc.) no se pueden abrir desde afuera
+RewriteRule ^api/_ - [F,L]
+<FilesMatch "^_">
+  Require all denied
+</FilesMatch>
+# Ni respaldos ni archivos de base que alguien deje acá por error
+<FilesMatch "\.(sql|bak|old|orig|log|csv|md|zip)$">
+  Require all denied
+</FilesMatch>
+
+# Cabeceras de seguridad (necesita mod_headers de Apache)
+<IfModule mod_headers.c>
+  # Todo sale del mismo servidor: sin CDN, sin fuentes externas, sin scripts en línea
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # Solo cuando la página se sirve por HTTPS
+  Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+
+  # El panel no tiene que aparecer en buscadores
+  <FilesMatch "^admin\.html$">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </FilesMatch>
+
+  # El HTML nunca se cachea: así el navegador siempre baja la última versión y nunca queda
+  # una página nueva con un JS/CSS viejo guardado.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
