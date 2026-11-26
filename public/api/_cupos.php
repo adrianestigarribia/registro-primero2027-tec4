@@ -92,7 +92,7 @@ function inscribir($d, $alerta)
         $orden = $ultimo + 1;
         $valores = [
             $orden, $d['alumnoApellido'], $d['alumnoNombre'], $d['fechaNacimiento'], $d['escuela'],
-            $d['calle'], $d['numero'], $d['pisoDepto'], $d['cp'], $d['email'],
+            $d['calle'], $d['numero'], $d['pisoDepto'], $d['cp'], $d['email'], $d['telefono'],
             $d['responsableApellido'], $d['responsableNombre'], $estado, $alerta,
         ];
 
@@ -102,7 +102,7 @@ function inscribir($d, $alerta)
             q(
                 'UPDATE inscripciones
                     SET orden = ?, alumno_apellido = ?, alumno_nombre = ?, fecha_nacimiento = ?, escuela_primaria = ?,
-                        calle = ?, numero = ?, piso_depto = ?, cp = ?, email = ?,
+                        calle = ?, numero = ?, piso_depto = ?, cp = ?, email = ?, telefono = ?,
                         responsable_apellido = ?, responsable_nombre = ?, estado = ?, alerta = ?,
                         promovida_at = NULL, anulada = 0, anulada_at = NULL, created_at = NOW(3)
                   WHERE id = ?',
@@ -113,9 +113,9 @@ function inscribir($d, $alerta)
             q(
                 'INSERT INTO inscripciones
                    (orden, alumno_apellido, alumno_nombre, fecha_nacimiento, escuela_primaria,
-                    calle, numero, piso_depto, cp, email,
+                    calle, numero, piso_depto, cp, email, telefono,
                     responsable_apellido, responsable_nombre, estado, alerta, dni)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 array_merge($valores, [$d['dni']])
             );
             $id = (int) db()->lastInsertId();

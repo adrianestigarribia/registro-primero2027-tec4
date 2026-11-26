@@ -203,7 +203,7 @@
   function coincide(f, q) {
     if (!q) return true;
     const digitos = q.replace(/[.\s]/g, '');
-    if (/^\d+$/.test(digitos)) return f.dni.includes(digitos);
+    if (/^\d+$/.test(digitos)) return f.dni.includes(digitos) || (f.telefono || '').includes(digitos);
     const texto = norm(`${f.alumnoApellido} ${f.alumnoNombre}`);
     return norm(q).split(/\s+/).filter(Boolean).every((p) => texto.includes(p));
   }
@@ -259,6 +259,11 @@
     $('#resumen').textContent = q ? `${lista.length} de ${total} coinciden con la búsqueda.` : `${lista.length} ${lista.length === 1 ? 'inscripción' : 'inscripciones'}.`;
   }
 
+  // "1123456789" -> "112345-6789" (igual que en el CSV)
+  function telefonoLegible(t) {
+    return `${t.slice(0, -4)}-${t.slice(-4)}`;
+  }
+
   function fila(f, posEspera) {
     const domicilio = `${f.calle} ${f.numero}${f.pisoDepto ? `, ${f.pisoDepto}` : ''}`;
     const tags = [el('span', { class: `tag tag-${f.estado}` }, ETIQUETA[f.estado])];
@@ -276,7 +281,8 @@
       el('td', { class: 'c-escuela', 'data-label': 'Escuela primaria' }, f.escuela),
       el('td', { class: 'c-dom', 'data-label': 'Domicilio' }, domicilio, el('span', { class: 'sub' }, `CP ${f.cp}`)),
       el('td', { class: 'c-contacto', 'data-label': 'Adulto responsable' },
-        `${f.responsableApellido}, ${f.responsableNombre}`, el('span', { class: 'sub' }, f.email)),
+        `${f.responsableApellido}, ${f.responsableNombre}`, el('span', { class: 'sub' }, f.email),
+        f.telefono ? el('span', { class: 'sub num' }, `Tel. ${telefonoLegible(f.telefono)}`) : null),
       el('td', { class: 'c-fecha', 'data-label': 'Enviada' }, fechaHora(f.createdMs)),
       el('td', { class: 'c-acc' },
         el('button', { class: 'btn btn-anular', type: 'button', onclick: () => abrirAnular(f.id) }, 'Anular')),

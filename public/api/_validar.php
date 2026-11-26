@@ -10,6 +10,7 @@
 // - DNI: 7 u 8 números (se aceptan puntos o espacios: 50.123.456).
 // - Fecha de nacimiento: fecha real, con edad para 1° año (ver _config.php).
 // - CP: 4 cifras o formato CPA (B1884ABC). Se guarda solo el número (1884).
+// - Teléfono: 8 a 13 cifras (se aceptan espacios, guiones, paréntesis y +). Se guardan solo las cifras.
 // Además, la base se consulta siempre con parámetros (?), nunca pegando texto al SQL,
 // y el navegador muestra los datos con textContent, nunca como HTML.
 
@@ -20,6 +21,7 @@ const MAX_CALLE = 100;
 const MAX_NUMERO = 10;
 const MAX_PISO = 20;
 const MAX_EMAIL = 120;
+const MAX_TELEFONO_TEXTO = 25;   // lo que se puede escribir (con espacios, guiones, etc.)
 
 // Letras latinas (incluye á é í ó ú ñ ü ç à ...)
 const LETRAS = 'A-Za-zÀ-ÖØ-öø-ÿ';
@@ -79,6 +81,16 @@ function normalizarCp($v)
     return preg_match('/^[A-Z]?(\d{4})(?:[A-Z]{3})?$/', $s, $m) ? $m[1] : '';
 }
 
+// "11 2345-6789", "(011) 4256-1234", "+54 9 11 2345 6789" -> solo las cifras.
+// Se aceptan cifras, espacios, guiones, puntos, paréntesis y un + al principio;
+// tienen que quedar entre 8 y 13 cifras. Cualquier otra cosa -> ''.
+function normalizarTelefono($s)
+{
+    if ($s === '' || mb_strlen($s) > MAX_TELEFONO_TEXTO || !preg_match('/^\+?[0-9 ().\-]+$/', $s)) return '';
+    $cifras = preg_replace('/\D/', '', $s);
+    return preg_match('/^\d{8,13}$/', $cifras) ? $cifras : '';
+}
+
 // Rango de nacimiento permitido: edad entre EDAD_MIN y EDAD_MAX al 30/06 del ciclo lectivo.
 // Devuelve ['desde' => 'AAAA-MM-DD', 'hasta' => 'AAAA-MM-DD'].
 function rangoNacimiento()
@@ -123,9 +135,11 @@ function validarInscripcion($b)
         'cpTexto' => limpiar(texto($b['cp'] ?? null)),
         'cp' => normalizarCp($b['cp'] ?? null),
         'email' => mb_strtolower(limpiar($b['email'] ?? null)),
+        'telefonoTexto' => limpiar(texto($b['telefono'] ?? null)),
         'responsableApellido' => limpiar($b['responsableApellido'] ?? null),
         'responsableNombre' => limpiar($b['responsableNombre'] ?? null),
     ];
+    $d['telefono'] = normalizarTelefono($d['telefonoTexto']);
     $e = [];
 
     if ($x = errorNombre($d['alumnoApellido'], 'Escribí el apellido del alumno.')) $e['alumnoApellido'] = $x;
@@ -157,13 +171,16 @@ function validarInscripcion($b)
         $e['email'] = 'Revisá el email: tiene que ser como nombre@ejemplo.com.';
     }
 
+    if ($d['telefonoTexto'] === '') $e['telefono'] = 'Escribí un teléfono de contacto.';
+    elseif ($d['telefono'] === '') $e['telefono'] = 'Revisá el teléfono: solo números, con código de área (por ejemplo 11 2345-6789).';
+
     if ($x = errorNombre($d['responsableApellido'], 'Escribí el apellido del adulto responsable.')) $e['responsableApellido'] = $x;
     if ($x = errorNombre($d['responsableNombre'], 'Escribí el nombre del adulto responsable.')) $e['responsableNombre'] = $x;
 
     // Ley 25.326: el aviso de privacidad se lee y se acepta antes de enviar
     if (($b['privacidad'] ?? null) !== true) $e['privacidad'] = 'Para enviar, leé y aceptá el aviso de privacidad.';
 
-    unset($d['cpTexto']);
+    unset($d['cpTexto'], $d['telefonoTexto']);
     return [$d, $e];
 }
 

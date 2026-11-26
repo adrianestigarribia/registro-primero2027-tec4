@@ -178,6 +178,12 @@
     else if (d.email.length > 120) e.email = 'El email es demasiado largo (máximo 120 caracteres).';
     else if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(d.email) || !form.email.checkValidity()) e.email = 'Revisá el email: tiene que ser como nombre@ejemplo.com.';
 
+    // Mismo criterio que _validar.php: cifras, espacios, - . ( ) y un + al principio; 8 a 13 cifras
+    if (!d.telefono) e.telefono = 'Escribí un teléfono de contacto.';
+    else if (d.telefono.length > 25 || !/^\+?[0-9 ().-]+$/.test(d.telefono) || !/^\d{8,13}$/.test(d.telefono.replace(/\D/g, ''))) {
+      e.telefono = 'Revisá el teléfono: solo números, con código de área (por ejemplo 11 2345-6789).';
+    }
+
     if ((x = errorNombre(d.responsableApellido, 'Escribí el apellido del adulto responsable.'))) e.responsableApellido = x;
     if ((x = errorNombre(d.responsableNombre, 'Escribí el nombre del adulto responsable.'))) e.responsableNombre = x;
 
@@ -201,6 +207,7 @@
       pisoDepto: limpiar(form.pisoDepto.value),
       cp: form.cp.value.toUpperCase().replace(/\s/g, ''),
       email: limpiar(form.email.value).toLowerCase(),
+      telefono: limpiar(form.telefono.value),
       responsableApellido: limpiar(form.responsableApellido.value),
       responsableNombre: limpiar(form.responsableNombre.value),
       privacidad: form.privacidad.checked,
@@ -331,7 +338,7 @@
   $('#imprimir').addEventListener('click', () => window.print());
 
   // Otro alumno (por ejemplo, un hermano): se borran los datos del alumno y quedan cargados
-  // el domicilio, el email y el adulto responsable.
+  // el domicilio, el email, el teléfono y el adulto responsable.
   $('#otro').addEventListener('click', () => {
     for (const n of ['alumnoApellido', 'alumnoNombre', 'dni', 'escuela', 'nacDia', 'nacMes', 'nacAnio']) form[n].value = '';
     formError.hidden = true;

@@ -20,11 +20,19 @@ function celdaSegura($v)
     return $v;
 }
 
+// "1123456789" -> "112345-6789". Con el guion, Excel lo toma como texto: no le saca un 0
+// inicial ni lo muestra como 1,12E+09.
+function telefonoLegible($t)
+{
+    if ($t === null || $t === '') return '';
+    return substr($t, 0, -4) . '-' . substr($t, -4);
+}
+
 try {
     $rows = db()->query(
         "SELECT id, orden, estado, anulada, alumno_apellido, alumno_nombre, dni,
                 DATE_FORMAT(fecha_nacimiento, '%d/%m/%Y') AS nacimiento,
-                escuela_primaria, calle, numero, piso_depto, cp, email,
+                escuela_primaria, calle, numero, piso_depto, cp, email, telefono,
                 responsable_apellido, responsable_nombre,
                 DATE_FORMAT(created_at, '%d/%m/%Y %H:%i') AS fecha_insc,
                 DATE_FORMAT(promovida_at, '%d/%m/%Y %H:%i') AS fecha_prom,
@@ -48,7 +56,7 @@ $out = fopen('php://output', 'w');
 fwrite($out, "\xEF\xBB\xBF"); // BOM
 $columnas = [
     'N° solicitud', 'Orden de llegada', 'Estado', 'Apellido/s alumno', 'Nombre/s alumno', 'DNI',
-    'Fecha de nacimiento', 'Escuela primaria', 'Calle', 'Número', 'Piso/Depto', 'CP', 'Email',
+    'Fecha de nacimiento', 'Escuela primaria', 'Calle', 'Número', 'Piso/Depto', 'CP', 'Email', 'Teléfono',
     'Apellido responsable', 'Nombre responsable', 'Fecha de inscripción', 'Promovida desde espera',
     'Anulada', 'Alerta',
 ];
@@ -61,7 +69,7 @@ foreach ($rows as $r) {
         $r['id'], $r['orden'],
         $anulada ? 'Anulada (era ' . $etiqueta[$r['estado']] . ')' : $etiqueta[$r['estado']],
         $r['alumno_apellido'], $r['alumno_nombre'], $r['dni'], $r['nacimiento'],
-        $r['escuela_primaria'], $r['calle'], $r['numero'], $r['piso_depto'] ?? '', $r['cp'], $r['email'],
+        $r['escuela_primaria'], $r['calle'], $r['numero'], $r['piso_depto'] ?? '', $r['cp'], $r['email'], telefonoLegible($r['telefono']),
         $r['responsable_apellido'], $r['responsable_nombre'], $r['fecha_insc'], $r['fecha_prom'] ?? '',
         $anulada ? $r['fecha_anul'] : '', $r['alerta'] ?? '',
     ];

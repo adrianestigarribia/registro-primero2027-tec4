@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS inscripciones (
   piso_depto           VARCHAR(20)  NULL,              -- opcional
   cp                   CHAR(4)      NOT NULL,          -- 4 cifras (de "B1884ABC" se guarda 1884)
   email                VARCHAR(120) NOT NULL,
+  telefono             VARCHAR(13)  NULL,              -- solo cifras (8 a 13); NULL en las anteriores al campo
   -- Adulto responsable
   responsable_apellido VARCHAR(80)  NOT NULL,
   responsable_nombre   VARCHAR(80)  NOT NULL,
@@ -70,6 +71,7 @@ CREATE TABLE IF NOT EXISTS inscripciones (
   -- Última defensa: aunque la API ya valida, la base no acepta formatos imposibles
   CONSTRAINT chk_dni CHECK (dni REGEXP '^[0-9]{7,8}$'),
   CONSTRAINT chk_cp  CHECK (cp REGEXP '^[0-9]{4}$'),
+  CONSTRAINT chk_telefono CHECK (telefono IS NULL OR telefono REGEXP '^[0-9]{8,13}$'),
   CONSTRAINT chk_anulada CHECK (anulada IN (0, 1))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

@@ -137,7 +137,7 @@ function ipCliente()
 const SELECT_INSCRIPCION = "
   SELECT id, orden, alumno_apellido, alumno_nombre, dni,
          DATE_FORMAT(fecha_nacimiento, '%Y-%m-%d') AS fecha_nacimiento,
-         escuela_primaria, calle, numero, piso_depto, cp, email,
+         escuela_primaria, calle, numero, piso_depto, cp, email, telefono,
          responsable_apellido, responsable_nombre, estado, alerta, anulada,
          FLOOR(UNIX_TIMESTAMP(created_at) * 1000)   AS created_ms,
          FLOOR(UNIX_TIMESTAMP(promovida_at) * 1000) AS promovida_ms,
@@ -161,6 +161,7 @@ function aInscripcion($r)
         'pisoDepto' => $r['piso_depto'],
         'cp' => $r['cp'],
         'email' => $r['email'],
+        'telefono' => $r['telefono'],      // null en inscripciones anteriores al campo
         'responsableApellido' => $r['responsable_apellido'],
         'responsableNombre' => $r['responsable_nombre'],
         'estado' => $r['estado'],

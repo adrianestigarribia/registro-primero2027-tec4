@@ -395,6 +395,16 @@ Vuelve a valer `ADMIN_CLAVE` de la configuración. Entrá y cambiala enseguida.
 UPDATE intentos_login SET fallos = 0, bloqueado_hasta = NULL;
 ```
 
+### Agregar el teléfono a una base que ya existía (migración v2)
+
+Si la base se creó antes de que el formulario pidiera teléfono, corré esto **como root y antes de publicar el código nuevo** (el usuario de la app no puede hacer `ALTER`):
+
+```bash
+mysql -u root -p --default-character-set=utf8mb4 < migracion-v2-telefono.sql
+```
+
+En Dokploy: terminal del servicio MariaDB → `mariadb -u root -p` → pegá el contenido del archivo (cambiando `inscripcion_tec4` por tu `DB_NAME` si es otro). Las inscripciones anteriores quedan sin teléfono.
+
 ### Backup
 
 ```bash
@@ -441,7 +451,8 @@ No se recomienda tocarla a mano (podría quedar con más de 68 vacantes ocupadas
 inscripcion-tec4/
 ├── .htaccess                     # si se sirve la carpeta entera: solo public/ es accesible
 ├── .gitignore
-├── schema.sql                    # base completa (versión 1); cambios futuros: migracion-v2.sql, ...
+├── schema.sql                    # base completa (ya incluye el teléfono)
+├── migracion-v2-telefono.sql     # agrega el teléfono a una base creada antes
 ├── README.md
 ├── pruebas/
 │   └── concurrencia.php          # prueba de 80 pedidos simultáneos (PHP de línea de comandos)

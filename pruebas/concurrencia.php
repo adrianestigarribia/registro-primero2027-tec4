@@ -73,7 +73,7 @@ function alumno($i, $dni = null)
     return [
         'alumnoApellido' => 'Prueba', 'alumnoNombre' => 'Concurrencia', 'dni' => (string) ($dni ?? 59000000 + $i),
         'fechaNacimiento' => '2015-06-15', 'escuela' => 'EP N° 1', 'calle' => 'Calle 14', 'numero' => (string) (1000 + $i),
-        'pisoDepto' => '', 'cp' => '1884', 'email' => "prueba$i@ejemplo.com",
+        'pisoDepto' => '', 'cp' => '1884', 'email' => "prueba$i@ejemplo.com", 'telefono' => '11 2345-6789',
         'responsableApellido' => 'Prueba', 'responsableNombre' => 'Adulto', 'privacidad' => true,
         'web' => '', 't' => 30000,   // como si hubieran tardado 30 s en completar (no marca alerta)
     ];
