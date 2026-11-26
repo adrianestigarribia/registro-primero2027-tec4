@@ -75,8 +75,8 @@
     const err = $('#login-error');
     const clave = $('#clave').value;
     err.hidden = true;
-    if (clave.length < 10) {
-      err.textContent = 'La contraseña tiene al menos 10 caracteres.';
+    if (clave.length < 6) {
+      err.textContent = 'La contraseña tiene al menos 6 caracteres.';
       err.hidden = false;
       return;
     }
@@ -399,7 +399,7 @@
     const nueva = $('#clave-nueva').value;
     const errores = {};
     if (!actual) errores.actual = 'Escribí la contraseña actual.';
-    if (nueva.length < 10 || nueva.length > 72) errores.nueva = 'Entre 10 y 72 caracteres.';
+    if (nueva.length < 6 || nueva.length > 72) errores.nueva = 'Entre 6 y 72 caracteres.';
     else if (nueva === actual) errores.nueva = 'Tiene que ser distinta de la actual.';
     if ($('#clave-repetir').value !== nueva) errores.repetir = 'No coincide con la nueva.';
     marcarErrores(errores);

@@ -17,7 +17,7 @@ $cfg = [
     'DB_PASSWORD' => 'test1234',          // la de XAMPP del README; en el servidor va otra
     'DB_NAME' => 'inscripcion_tec4',
 
-    // Contraseña inicial del panel (10 a 72 caracteres). Después se cambia desde el panel,
+    // Contraseña inicial del panel (6 a 72 caracteres). Después se cambia desde el panel,
     // y desde ese momento esta ya no sirve (vale la guardada cifrada en la base).
     'ADMIN_CLAVE' => 'cambiar-esta-clave',
 

@@ -17,7 +17,7 @@ const MAX_FALLOS = 5;
 const BLOQUEO_SEG = 300;          // 5 minutos
 const VENTANA_MIN = 15;           // los fallos se cuentan dentro de esta ventana
 const SESION_MAX_SEG = 12 * 3600; // una sesión dura como mucho 12 horas
-const CLAVE_MIN = 10;
+const CLAVE_MIN = 6;
 const CLAVE_MAX = 72;             // bcrypt solo usa los primeros 72 bytes
 
 function esClaveValida($c)
@@ -35,7 +35,7 @@ function claveGuardada()
 {
     $v = q('SELECT valor FROM ajustes WHERE clave = ?', [CLAVE_ADMIN])->fetchColumn();
     if ($v !== false) return $v;
-    if (!esClaveValida(ADMIN_CLAVE)) throw new RuntimeException('ADMIN_CLAVE tiene que tener entre 10 y 72 caracteres.');
+    if (!esClaveValida(ADMIN_CLAVE)) throw new RuntimeException('ADMIN_CLAVE tiene que tener entre 6 y 72 caracteres.');
     q('INSERT IGNORE INTO ajustes (clave, valor) VALUES (?, ?)', [CLAVE_ADMIN, cifrarClave(ADMIN_CLAVE)]);
     return q('SELECT valor FROM ajustes WHERE clave = ?', [CLAVE_ADMIN])->fetchColumn();
 }
