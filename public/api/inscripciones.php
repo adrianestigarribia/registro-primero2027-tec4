@@ -16,6 +16,7 @@ if ($since !== '' && !preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d{1,6
 }
 
 try {
+    promoverPendientes();   // antes del cursor, así el panel ve enseguida a los promovidos
     // Cursor con 2 s de margen para no perder escrituras que se confirmaron justo ahora;
     // el panel descarta duplicados por id. ("cursor" es palabra reservada en MariaDB)
     $cur = db()->query("SELECT DATE_FORMAT(NOW(3) - INTERVAL 2 SECOND, '%Y-%m-%d %H:%i:%s.%f') AS cur")->fetchColumn();

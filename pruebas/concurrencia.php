@@ -4,10 +4,10 @@
 // Manda muchas inscripciones AL MISMO TIEMPO (curl_multi: todas salen juntas, como si 80
 // familias tocaran "Enviar" en el mismo instante) y verifica que el control de cupos no
 // se rompa:
-//   1. Exactamente CUPO (68) quedan "Inscripción Recibida" y el resto "Lista de Espera".
+//   1. Exactamente CUPO (45) quedan "Inscripción Recibida" y el resto "Lista de Espera".
 //   2. Ningún número de solicitud ni de orden se repite.
-//   3. Los ingresantes son los primeros en el orden de llegada (orden 1..68) y la lista de
-//      espera sigue después (69..80), sin huecos.
+//   3. Los ingresantes son los primeros en el orden de llegada (orden 1..45) y la lista de
+//      espera sigue después (46..80), sin huecos.
 //   4. El mismo DNI enviado 10 veces a la vez se guarda UNA sola vez y ocupa un solo lugar.
 //
 // Uso (desde la carpeta del proyecto, con PHP de línea de comandos):
@@ -118,7 +118,7 @@ if (!ok($cod === 200 && !empty($ping['base']), "El servidor responde y se conect
     exit(1);
 }
 
-$cupo = 68;
+$cupo = 45;
 $panel = false;
 if ($clave !== null) {
     [$cod, $j] = pedido('POST', 'api/login', ['clave' => $clave]);
@@ -132,7 +132,7 @@ if ($clave !== null) {
     }
     $panel = true;
 } else {
-    echo "  (Sin --clave: se asume la base vacía y CUPO = 68. Con --clave se verifica también en el panel.)\n";
+    echo "  (Sin --clave: se asume la base vacía y CUPO = 45. Con --clave se verifica también en el panel.)\n";
 }
 $esperados = min($cupo, $cantidad);
 echo "  Cupo: $cupo · Inscripciones a la vez: $cantidad · Esperado: $esperados ingresantes y " . ($cantidad - $esperados) . " en lista de espera\n";

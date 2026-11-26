@@ -1,6 +1,6 @@
 # Inscripción a 1° año · E.E.S.T. N°4 Berazategui
 
-Aplicación web para que las familias soliciten una vacante en 1° año desde el celular, con control estricto de cupos (68 vacantes), lista de espera automática, filtro por código postal de Berazategui y un panel privado para directivos y preceptoría.
+Aplicación web para que las familias soliciten una vacante en 1° año desde el celular, con control estricto de cupos (45 vacantes), lista de espera automática, filtro por código postal de Berazategui y un panel privado para directivos y preceptoría.
 
 Está hecha con el mismo estilo que [registro-muestra](https://github.com/haghen29/registro-muestra): **HTML, CSS y JavaScript puros** (sin frameworks, sin npm, sin CDN), **PHP 8 + PDO + MariaDB** y Apache.
 
@@ -9,17 +9,17 @@ Está hecha con el mismo estilo que [registro-muestra](https://github.com/haghen
 ## Sobre este proyecto
 
 ### El problema
-Cada año la escuela recibe más solicitudes que vacantes para 1° año. Con inscripción en papel o con un formulario común es difícil saber quién llegó primero, controlar que el alumno viva en el partido y evitar que la misma familia mande la solicitud dos veces. Además, si muchas familias envían el formulario al mismo tiempo, un sistema mal hecho puede dar **más de 68 vacantes**.
+Cada año la escuela recibe más solicitudes que vacantes para 1° año. Con inscripción en papel o con un formulario común es difícil saber quién llegó primero, controlar que el alumno viva en el partido y evitar que la misma familia mande la solicitud dos veces. Además, si muchas familias envían el formulario al mismo tiempo, un sistema mal hecho puede dar **más de 45 vacantes**.
 
 ### La solución
 - **La familia completa un formulario corto desde el celular** y recibe una constancia con su **número de solicitud** y su **estado**:
-  - **Inscripción Recibida** (verde): está dentro de las 68 vacantes.
-  - **Lista de Espera** (naranja): llegó después de la vacante 68.
+  - **Inscripción Recibida** (verde): está dentro de las 45 vacantes.
+  - **Lista de Espera** (naranja): llegó después de la vacante 45.
   - **Fuera de zona** (gris): el código postal no es de Berazategui. Se guarda aparte y no ocupa vacante.
 - **La escuela ve todo en tiempo real** desde el panel: vacantes ocupadas, lista de espera y fuera de zona; busca por apellido o DNI; anula una solicitud, y la vacante pasa sola al primero de la lista de espera; y descarga todo en CSV para Excel.
 
 ### Por qué está pensada así
-- **Concurrencia primero.** Lo más importante es que nunca haya más de 68 ingresantes, aunque 80 familias toquen "Enviar" en el mismo milisegundo. Ver [Cómo funciona el control de cupos](#cómo-funciona-el-control-de-cupos).
+- **Concurrencia primero.** Lo más importante es que nunca haya más de 45 ingresantes, aunque 80 familias toquen "Enviar" en el mismo milisegundo. Ver [Cómo funciona el control de cupos](#cómo-funciona-el-control-de-cupos).
 - **Primero el celular.** Casi todas las familias lo hacen desde el teléfono: botones grandes, letra de 18 px (el iPhone no hace zoom) y fecha de nacimiento con tres listas en vez de un calendario.
 - **Datos de menores protegidos (Ley 25.326).** Aviso de privacidad visible antes de enviar, datos visibles solo con contraseña, nada público y nada guardado en el celular de la familia.
 
@@ -37,7 +37,7 @@ Cada año la escuela recibe más solicitudes que vacantes para 1° año. Con ins
 | Situación | Qué pasa |
 |---|---|
 | CP de Berazategui y hay vacantes | **Inscripción Recibida** (en el panel: *Ingresante*) |
-| CP de Berazategui y las 68 vacantes ocupadas | **Lista de Espera**, por orden de llegada |
+| CP de Berazategui y las 45 vacantes ocupadas | **Lista de Espera**, por orden de llegada |
 | CP de otro partido | **Fuera de zona**: se guarda, no ocupa vacante ni entra en la lista de espera |
 | El mismo DNI otra vez, con la misma fecha de nacimiento | Ve **su constancia original**. No se crea otra ni se ocupa otra vacante |
 | El mismo DNI con **otra** fecha de nacimiento | Error: "comunicate con la escuela". No se muestran datos del otro alumno |
@@ -128,14 +128,22 @@ Todo lo que se puede cambiar está en **un solo lugar**: `public/api/_config.php
 | Clave | Valor inicial | Qué es |
 |---|---|---|
 | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | XAMPP | Conexión a MariaDB |
-| `ADMIN_CLAVE` | `cambiar-esta-clave` | Contraseña **inicial** del panel (10 a 72 caracteres). Cuando se cambia desde el panel, esta deja de valer |
-| `CUPO` | `68` | Vacantes de 1° año |
+| `ADMIN_CLAVE` | `cambiar-esta-clave` | Contraseña **inicial** del panel (6 a 72 caracteres). Cuando se cambia desde el panel, esta deja de valer |
+| `CUPO` | `45` | Vacantes de 1° año. 1° período: `45`. Para abrir el 2° período (30 más): `75` |
 | `CP_BERAZATEGUI` | `1884,1885,1886,1890,1893,1894` | Códigos postales del partido. **Confirmalos con Correo Argentino antes de abrir la inscripción** |
 | `CICLO_LECTIVO` | `2027` | Año en que empiezan 1° año |
 | `EDAD_MIN`, `EDAD_MAX` | `11`, `15` | Edad permitida al 30/06 del ciclo lectivo. Con 2027: nacidos entre el 01/07/2011 y el 30/06/2016 |
 | `LIMITE_IP` | `on` | Límite de envíos por IP (20 por minuto, 200 por hora). **`off` solo para la prueba de concurrencia** |
 
-También se pueden pasar como variables de entorno del servidor (`CUPO=68`, etc.), que tienen prioridad sobre los dos archivos.
+También se pueden pasar como variables de entorno del servidor (`CUPO=45`, etc.), que tienen prioridad sobre los dos archivos.
+
+### Dos períodos de vacantes
+
+1. **1° período:** `CUPO=45`. Las primeras 45 inscripciones de Berazategui son "Inscripción Recibida"; las demás quedan en Lista de Espera.
+2. **2° período:** cambiá `CUPO` a `75` (en Dokploy: Environment → `CUPO=75` → Save → Deploy).
+   - Los **primeros 30 de la lista de espera** pasan solos a "Inscripción Recibida", por orden de llegada (en cuanto alguien abre el panel o llega una inscripción nueva). Aparecen con la etiqueta **Promovida**.
+   - Si en la espera había menos de 30, las vacantes que sobran las toman las inscripciones nuevas.
+   - Nunca se baja el cupo con gente adentro: si se pone un número menor, nadie pierde la vacante, solo dejan de entrar nuevos.
 
 El formulario toma el ciclo lectivo y el rango de años de nacimiento de `/api/ping`, así que no hace falta tocar el HTML ni el JS cuando cambia el año.
 
@@ -223,9 +231,9 @@ session.cookie_secure = On  ; la app ya lo pone sola si detecta HTTPS
 
 `pruebas/concurrencia.php` manda **80 inscripciones al mismo tiempo** (todas salen juntas con `curl_multi`) y verifica:
 
-1. que queden **exactamente 68 "Inscripción Recibida" y 12 "Lista de Espera"**;
+1. que queden **exactamente 45 "Inscripción Recibida" y 35 "Lista de Espera"**;
 2. que no se repita ningún número de solicitud ni de orden;
-3. que los 68 ingresantes sean **los primeros 68 en llegar** (orden 1 a 68) y la espera siga después, sin huecos;
+3. que los 45 ingresantes sean **los primeros 45 en llegar** (orden 1 a 45) y la espera siga después, sin huecos;
 4. que el **mismo DNI enviado 10 veces a la vez** se guarde una sola vez (1 nuevo y 9 "constancia original").
 
 ### Cómo correrla (en tu compu, nunca contra la base real)
@@ -253,11 +261,11 @@ Resultado esperado (resumido):
 ```
 == 1. 80 inscripciones en paralelo ==
   [OK]    Todas respondieron 201 (80 × HTTP 201)
-  [OK]    Inscripción Recibida: 68 (esperado 68)
-  [OK]    Lista de Espera: 12 (esperado 12)
+  [OK]    Inscripción Recibida: 45 (esperado 45)
+  [OK]    Lista de Espera: 35 (esperado 35)
 == 2. Lo que quedó guardado en la base (vía panel) ==
   [OK]    Orden de llegada 1..80, sin repetidos ni huecos
-  [OK]    Los ingresantes son exactamente los primeros 68 en llegar; la espera sigue después
+  [OK]    Los ingresantes son exactamente los primeros 45 en llegar; la espera sigue después
 == 3. El mismo DNI enviado 10 veces a la vez ==
   [OK]    Se guardó una sola vez (1 respuesta 201)
 RESULTADO: TODO OK. El control de cupos resiste pedidos simultáneos.
@@ -275,7 +283,7 @@ Entrá a `/admin` con la contraseña.
 
 ### Contadores (se actualizan solos cada 3 segundos)
 
-- **Barra de vacantes:** "X de 68 vacantes ocupadas" y cuántas quedan libres ("Cupo completo" cuando no queda ninguna).
+- **Barra de vacantes:** "X de 45 vacantes ocupadas" y cuántas quedan libres ("Cupo completo" cuando no queda ninguna).
 - **Todas / Ingresantes / Lista de espera / Fuera de zona:** también son **filtros** de la tabla.
 - El punto verde **"En vivo"** indica que está conectado. Si se corta, dice "Sin conexión, reintentando…" y sigue solo cuando vuelve.
 
@@ -425,7 +433,7 @@ DELETE FROM intentos_login;
 
 ### Recuperar una inscripción anulada por error
 
-No se recomienda tocarla a mano (podría quedar con más de 68 vacantes ocupadas). Lo correcto es que la familia **vuelva a enviar el formulario con el mismo DNI**: la fila se reactiva y entra al final de la fila, con el estado que le corresponda en ese momento.
+No se recomienda tocarla a mano (podría quedar con más de 45 vacantes ocupadas). Lo correcto es que la familia **vuelva a enviar el formulario con el mismo DNI**: la fila se reactiva y entra al final de la fila, con el estado que le corresponda en ese momento.
 
 ---
 
@@ -494,7 +502,7 @@ BEGIN
                                                                       (los demás esperan acá)
   SELECT ... FROM inscripciones WHERE dni = ? FOR UPDATE;           ← ¿ya estaba ese DNI?
   SELECT COUNT(*) ... estado = 'ingresante' LOCK IN SHARE MODE;     ← cuenta con el candado tomado
-  INSERT ... estado = (cuenta < 68 ? 'ingresante' : 'espera'), orden = ultimo_orden + 1
+  INSERT ... estado = (cuenta < 45 ? 'ingresante' : 'espera'), orden = ultimo_orden + 1
   UPDATE control_cupos SET ultimo_orden = ultimo_orden + 1;
 COMMIT                                                              ← suelta el candado
 ```

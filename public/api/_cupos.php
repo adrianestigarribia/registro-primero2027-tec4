@@ -143,6 +143,20 @@ function anular($id)
     });
 }
 
+// Si hay vacantes libres y gente esperando (por ejemplo, porque se subió CUPO para abrir el
+// 2° período), promueve a la lista de espera en ese momento, sin esperar a la próxima
+// inscripción o anulación. Lo llama el panel en cada consulta; casi siempre no hace nada
+// (la primera cuenta es sin candado, y la promoción real se decide con el candado tomado).
+function promoverPendientes()
+{
+    $c = contadores();
+    if ($c['libres'] === 0 || $c['espera'] === 0) return;
+    transaccion(function () {
+        tomarCandado();
+        completarVacantes();
+    });
+}
+
 // Contadores para el panel (sin anuladas)
 function contadores()
 {

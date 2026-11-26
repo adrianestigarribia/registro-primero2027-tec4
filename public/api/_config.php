@@ -23,7 +23,11 @@ $cfg = [
 
     // Vacantes de 1° año. Las primeras CUPO inscripciones de Berazategui son "Inscripción Recibida";
     // de ahí en adelante, "Lista de Espera".
-    'CUPO' => 68,
+    // Dos períodos: el 1° con 45 vacantes; para abrir el 2° (30 más) se cambia a 75.
+    // Al subirlo, los primeros 30 de la lista de espera pasan solos a "Inscripción Recibida"
+    // (por orden de llegada) y las que sobren las toman las inscripciones nuevas.
+    // En Dokploy se cambia la variable de entorno CUPO (tiene prioridad sobre este archivo).
+    'CUPO' => 45,
 
     // Códigos postales del partido de Berazategui (4 cifras, separados por coma).
     // 1884 Berazategui · 1885 Guillermo E. Hudson · 1886 Ranelagh

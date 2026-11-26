@@ -11,7 +11,7 @@ return [
     'DB_PASSWORD' => 'una-contraseña-larga-y-segura',
     'DB_NAME' => 'inscripcion_tec4',
     'ADMIN_CLAVE' => 'otra-contraseña-larga',   // inicial; cambiala desde el panel el primer día
-    // 'CUPO' => 68,
+    // 'CUPO' => 45,
     // 'CP_BERAZATEGUI' => '1884,1885,1886,1890,1893,1894',
     // 'CICLO_LECTIVO' => 2027,
 ];
